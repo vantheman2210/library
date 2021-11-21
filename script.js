@@ -1,86 +1,124 @@
-let submit = document.getElementById("submit"); 
+let submit = document.getElementById("submit");  
 let form = document.getElementById("bookForm");
-  submit.addEventListener("click", () => {  
-    addBookToLibrary(); 
+  submit.addEventListener("click", () => {    
+    addBookToLibrary();  
     form.reset();
+  }) 
+
+  readButton.addEventListener("click", () => { 
+    if(readButton.innerText === "READ") { 
+      readButton.innerText = "NOT READ";
+    } else { 
+      readButton.innerText = "READ";
+    }
   })
 
-
-let myLibrary = [{ author: "Tolkien", title: "Hobbit", pages: 279, read: true}, 
-{ author: "Coelho", title: "Alchemist", pages: 279, read: false}, 
-{ author: "Reagan", title: "American Life", pages: 279, read: false},
-   
-  ];
+let myLibrary = []; 
 
 function Book(title, author, pages, read) {
   this.title = title; 
   this.author = author; 
   this.pages = Number(pages); 
-  this.read = function() { 
-    if ("read") { 
-      return true;
-    } else { 
-      return false;
-    }
-  }; 
-  console.log(this.read);
-}
-
-function addBookToLibrary() {  
-  let titleNew = document.getElementById("titleForm").value; 
-  let authorNew = document.getElementById("authorForm").value; 
-  let pagesNew = document.getElementById("pagesForm").value; 
-  let readNew = document.getElementById("readForm").value;
-  let book = new Book(titleNew, authorNew, pagesNew, readNew); 
-    myLibrary.push(book);   
-    displayLibrary();  
+  this.read = read; 
 }  
 
-function displayLibrary () {  
+function addBookToLibrary() {   
+  
+  let titleNew = document.getElementById("titleForm").value; 
+  let authorNew = document.getElementById("authorForm").value; 
+  let pagesNew = document.getElementById("pagesForm").value;  
+  let readNew = document.getElementById("readButton").innerText; 
+  
+  let book = new Book(titleNew, authorNew, pagesNew, readNew);  
+    myLibrary.push(book); 
+    displayLibrary();
+}  
+
+function readStatus(number, string) {  
+  myLibrary[number]['read'] = string; 
+}
+
+const populateStorage = () => {
+  localStorage.setItem('library', JSON.stringify(myLibrary));
+}
+
+const getStorage = () => {
+  myLibrary = JSON.parse(localStorage.getItem('library'));
+}
+
+function displayLibrary () {    
+
+  populateStorage(); 
 
   let container = document.getElementById("container"); 
   container.innerHTML = "";
 
-  for(i = 0; i < myLibrary.length; i++) {   
+  for(i = 0; i < myLibrary.length; i++) {    
 
+    let index = myLibrary[i];   
+    
+   
     let grid = document.createElement("div");  
-    grid.id = "book" + i;  
+    grid.id =  i;   
+    grid.setAttribute("value", i); 
+    grid.setAttribute("class", "books");
+    
+    let author = document.createElement("h2");  
+    author.id = "author"; 
 
-    let h2 = document.createElement("h2");  
-    h2.id = "author"; 
+    let title = document.createElement("h3");  
+    title.id = "title"; 
 
-    let h3 = document.createElement("h3");  
-    h3.id = "title"; 
+    let pages = document.createElement("h3");  
+    pages.id = "pages"; 
 
-    let h33 = document.createElement("h3");  
-    h33.id = "pages"; 
+    let read = document.createElement("button");
+    read.id = "read";  
 
-    let h333 = document.createElement("h3");
-    h333.id = "read";
+    let remove = document.createElement("button"); 
+    remove.id = "remove";  
 
     document.getElementById("container").appendChild(grid);  
-    grid.appendChild(h2); 
-    grid.appendChild(h3); 
-    grid.appendChild(h33); 
-    grid.appendChild(h333);
+    grid.appendChild(author); 
+    grid.appendChild(title); 
+    grid.appendChild(pages); 
+    grid.appendChild(read); 
+    grid.appendChild(remove); 
+    
+    author.innerHTML = "Author: " + (myLibrary[i].author); 
+    title.innerHTML = "Title: " + (myLibrary[i].title); 
+    pages.innerHTML = "Pages: " + (myLibrary[i].pages); 
+    read.innerText = myLibrary[i].read;    
+    remove.innerHTML = '<i class="fa fa-trash fa-2x"></i>';   
+    
+    remove.addEventListener("click", () => {   
+      index = grid.id;
+      myLibrary.splice(index, 1);       
+      displayLibrary();
+    })   
 
-    h2.innerHTML = "Author: " + JSON.stringify(myLibrary[i].author); 
-    h3.innerHTML = "Title: " + JSON.stringify(myLibrary[i].title); 
-    h33.innerHTML = "Pages: " + JSON.stringify(myLibrary[i].pages); 
-    h333.innerHTML = "Read: " + JSON.stringify(myLibrary[i].read); 
-}; 
+    read.addEventListener("click", () => {   
+      index = grid.id;
 
-/*let button = document.getElementById("newBook"); 
-button.addEventListener("click", () => { 
-  let form = document.getElementById("bookForm")
-  form.style.display = 'block';   
-}) */
+      if (read.innerText == "READ") {   
+          read.innerText = "NOT READ"; 
+          readStatus(index, "NOT READ");  
+          populateStorage();
 
-/*let submit = document.getElementById("submit");
-  submit.addEventListener("click", () => {  
-    addBookToLibrary();
-  })*/
+      } else if(read.innerText == "NOT READ"){  
+          read.innerText = "READ"; 
+          readStatus(index, "READ");   
+          populateStorage();
+          
+        }})    
+    };  
+} 
 
-}
-//addBookToLibrary(); 
-//displayLibrary();
+document.addEventListener("DOMContentLoaded", () => { 
+  if(!localStorage.getItem('library')) {
+    populateStorage();
+  } else {
+    getStorage(); 
+    displayLibrary()
+  }
+})
