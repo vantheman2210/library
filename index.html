@@ -10,23 +10,44 @@
   <title>Library</title>
 </head>
 <body>
-  <div id="header">Library</div>  
+  <nav>
+  <div id="header">Library</div> 
+  <div id="signInBtn">Log In</div>
+  <div id="signOutBtn">Log Out</div>  
+</nav>
   <div id="main2">
   <div class="main">
   <div id="container"></div>  
-  <form id="bookForm"> 
+  <form id="bookForm" onsubmit="return false">
       <label for="title">Author:</label><br>
-      <input type="text" id="authorForm" name="author"><br>
+      <input type="text" id="authorForm" name="author" required><br>
       <label for="author">Title:</label><br>
-      <input type="text" id="titleForm" name="title"><br>
+      <input type="text" id="titleForm" name="title" required><br>
       <label for="pages">Pages:</label><br>
-      <input type="text" id="pagesForm" name="pages"><br>
+      <input type="text" id="pagesForm" name="pages" required><br>
       <button type="button" id="readButton">READ</button><br>
-      <input type="button" id="submit" value="Add">
+      <input type="submit" id="submit" value="Add">
   </form> 
 </div>  
 <footer>vantheman2210 ©</footer> 
 </div> 
-  <script src="script.js"></script>
+<script src="script.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script >
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3sGluLd_dd2RHBTYS1JxhS9l7wnsRMdo",
+    authDomain: "library-d1050.firebaseapp.com",
+    projectId: "library-d1050",
+    storageBucket: "library-d1050.appspot.com",
+    messagingSenderId: "118316729071",
+    appId: "1:118316729071:web:5441e2cfd54351ca8f911a"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
 </body>
 </html> 

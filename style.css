@@ -7,6 +7,23 @@ html, body {
 
 } 
 
+nav { 
+  display: flex; 
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#signInBtn { 
+  display: block;
+  cursor: pointer;
+}
+
+#signOutBtn { 
+  display: none;
+  cursor: pointer;
+}
+
 #header { 
   display: flex; 
   justify-content: center; 
@@ -147,6 +164,3 @@ footer {
 }
 
 
-/*#bookForm { 
-  display: none;
-}*/
