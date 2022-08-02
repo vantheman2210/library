@@ -240,6 +240,8 @@ const deleteBookDb = async (title) => {
 	db.collection('books').doc(await getDocId(title)).delete();
 };
 
-const updateReadDb = async (title) => {
-	db.collection('books').doc(await getDocId(title)).update({ read: 'NOT READ' });
+const updateReadDb = async (book) => {
+	db.collection('books')
+	.doc(await getDocId(book.title))
+	.update({ read: !book.read });
 };
