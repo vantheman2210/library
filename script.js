@@ -6,8 +6,8 @@ submit.addEventListener('click', () => {
 	form.reset();
 });
 
-readButton.addEventListener('click', () => {
-	if (read) {
+document.getElementById('readButton').addEventListener('click', () => {
+	if (readButton.innerText === 'READ') {
 		readButton.innerText = 'NOT READ';
 	} else {
 		readButton.innerText = 'READ';
@@ -17,7 +17,7 @@ readButton.addEventListener('click', () => {
 let myLibrary = [];
 
 class Book {
-	constructor(title, author, pages, read = false) {
+	constructor(title, author, pages, read) {
 		this.title = title;
 		this.author = author;
 		this.pages = Number(pages);
@@ -31,7 +31,13 @@ function addBookToLibrary() {
 	let pagesNew = document.getElementById('pagesForm').value;
 	let readNew = document.getElementById('readButton').innerText;
 
-	let book = new Book(titleNew, authorNew, pagesNew, readNew);
+	const read = () => {
+		if (readNew === 'NOT READ') {
+			return false;
+		} else return true;
+	};
+
+	let book = new Book(titleNew, authorNew, pagesNew, read());
 
 	if (auth.currentUser) {
 		console.log(auth.currentUser);
@@ -47,6 +53,15 @@ function readStatus(number, condition) {
 	console.log(myLibrary[number].read);
 	myLibrary[number]['read'] = condition === true ? false : true;
 }
+
+const updateReadDiv = (cond) => {
+	console.log(cond)
+	const read = document.getElementById('readButton')
+	if(cond === true) {
+		read.innerText = 'NOT READ'
+	} else read.innerText = 'READ'
+	
+};
 
 const populateStorage = () => {
 	localStorage.setItem('library', JSON.stringify(myLibrary));
@@ -96,13 +111,13 @@ function displayLibrary() {
 		author.innerHTML = 'Author: ' + myLibrary[i].author;
 		title.innerHTML = 'Title: ' + myLibrary[i].title;
 		pages.innerHTML = 'Pages: ' + myLibrary[i].pages;
-		read.innerText = myLibrary[i].read;
+		read.innerText = myLibrary[i].read === true ? 'READ' : 'NOT READ';
 		remove.innerHTML = '<i class="fa fa-trash fa-2x"></i>';
 
 		remove.addEventListener('click', () => {
-			index = grid.id;
-			const firestoreTitle = myLibrary[index].title;
-			myLibrary.splice(index, 1);
+			let gridIndex = grid.id;
+			const firestoreTitle = myLibrary[gridIndex].title;
+			myLibrary.splice(gridIndex, 1);
 			if (auth.currentUser !== null) {
 				console.log('user');
 				deleteBookDb(firestoreTitle);
@@ -113,15 +128,19 @@ function displayLibrary() {
 
 		read.addEventListener('click', () => {
 			const index = grid.id;
-			const isRead = myLibrary[0].read;
-
-			if (isRead) {
-				read.innerText = 'NOT READ';
-				readStatus(index, true);
-				populateStorage();
+			const book = myLibrary[index];
+			const isRead = myLibrary[index].read;
+			console.log(index);
+			if (auth.currentUser) {
+				console.log(isRead);
+				console.log(book);
+				console.log('user');
+				updateReadDb(book);
+				updateReadDiv(read, isRead);
 			} else {
-				read.innerText = 'READ';
-				readStatus(index, false);
+				console.log('public');
+				updateReadDiv(isRead);
+				readStatus(index, true);
 				populateStorage();
 			}
 		});
@@ -231,7 +250,7 @@ const docsToBooks = (docs) => {
 
 const getDocId = async (title) => {
 	const data = await db.collection('books').where('title', '==', title).get();
-	const id = data.docs.map((doc) => doc.id).join('');
+	const id = data.docs.map((doc) => doc.id).join();
 	return id;
 };
 
@@ -241,7 +260,6 @@ const deleteBookDb = async (title) => {
 };
 
 const updateReadDb = async (book) => {
-	db.collection('books')
-	.doc(await getDocId(book.title))
-	.update({ read: !book.read });
+	console.log(book);
+	db.collection('books').doc(await getDocId(book.title)).update({ read: !book.read });
 };
