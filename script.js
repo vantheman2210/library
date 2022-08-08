@@ -128,7 +128,7 @@ function displayLibrary() {
 
 		read.addEventListener('click', () => {
 			const index = grid.id;
-			const book = myLibrary[index]
+			const book = myLibrary[index];
 			const isRead = myLibrary[index].read;
 			console.log(index);
 			if (auth.currentUser) {
@@ -141,10 +141,6 @@ function displayLibrary() {
 				console.log('public');
 				updateReadDiv(isRead);
 				readStatus(index, true);
-				populateStorage();
-			} else {
-				read.innerText = 'READ';
-				readStatus(index, false);
 				populateStorage();
 			}
 		});
@@ -264,8 +260,6 @@ const deleteBookDb = async (title) => {
 };
 
 const updateReadDb = async (book) => {
-	console.log(book)
-	db.collection('books')
-	.doc(await getDocId(book.title))
-	.update({ read: !book.read });
+	console.log(book);
+	db.collection('books').doc(await getDocId(book.title)).update({ read: !book.read });
 };
