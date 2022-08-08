@@ -128,8 +128,7 @@ function displayLibrary() {
 
 		read.addEventListener('click', () => {
 			const index = grid.id;
-<<<<<<< HEAD
-			const book = myLibrary[index];
+			const book = myLibrary[index]
 			const isRead = myLibrary[index].read;
 			console.log(index);
 			if (auth.currentUser) {
@@ -138,29 +137,17 @@ function displayLibrary() {
 				console.log('user');
 				updateReadDb(book);
 				updateReadDiv(read, isRead);
-=======
-			const book = myLibrary[index]
-			const isRead = myLibrary[index].read;
-			console.log(index)
-			if (auth.currentUser) { 
-				console.log('user')
-				console.log(book)
-				updateReadDb(book)
-			} 
-			if (isRead) {
-				read.innerText = 'NOT READ';
-				readStatus(index, true);
-				populateStorage();
->>>>>>> 3b0e7de (updated)
 			} else {
 				console.log('public');
 				updateReadDiv(isRead);
 				readStatus(index, true);
 				populateStorage();
+			} else {
+				read.innerText = 'READ';
+				readStatus(index, false);
+				populateStorage();
 			}
-		
 		});
-
 	}
 }
 
@@ -277,13 +264,8 @@ const deleteBookDb = async (title) => {
 };
 
 const updateReadDb = async (book) => {
-<<<<<<< HEAD
-	console.log(book);
-	db.collection('books').doc(await getDocId(book.title)).update({ read: !book.read });
-=======
 	console.log(book)
 	db.collection('books')
 	.doc(await getDocId(book.title))
 	.update({ read: !book.read });
->>>>>>> 3b0e7de (updated)
 };
