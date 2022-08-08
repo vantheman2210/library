@@ -163,4 +163,23 @@ footer {
   transform: translateY(4px); 
 }
 
+#signOutBtn, #signInBtn { 
+  border: 1px solid black; 
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: white;
+  background-color: black;
+}
+
+#signInBtn:hover {
+  background-color: black;
+  box-shadow: 0 5px #666;
+  transform: scale(1.15); 
+} 
+
+#signOutBtn:hover {
+  background-color: black;
+  box-shadow: 0 5px #666;
+  transform: scale(1.15); 
+} 
 
